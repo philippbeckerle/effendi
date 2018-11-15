@@ -1,4 +1,3 @@
-
 //this is an Arduino sketch that is connected to a GY-61 DXL335 3 Axis accelerometer and sends the tilt of the x and y axes via XBee via API mode to a coordinator XBee 
 
 #include <SoftwareSerial.h>
@@ -46,14 +45,7 @@ float scale = 102.3;  //ADXL335330 Sensitivity is 330mv/g
 xdata =(((float)x - 395)/65*9.8);
 ydata =(((float)y - 395)/68.5*9.8);
 
-sendData();
-
-
-//Serial.print(((float)x - 395)/65*9.8);  //print x value on serial monitor
-//Serial.print("\t");
-//Serial.print(((float)y - 395)/68.5*9.8);  //print y value on serial monitor
-//Serial.print("\n");
-//delay(1000);  //wait for 1 second 
+sendData(); 
 }
 
 void sendData() {

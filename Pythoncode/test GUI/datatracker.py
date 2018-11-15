@@ -22,7 +22,7 @@ import matplotlib.animation as animation
 import time
 
 
-strPort = "com3" #Com port of the Arduino Devices
+strPort = "com10" #Com port of the Arduino Devices
 docName = "test"
 
 
@@ -43,7 +43,11 @@ class AnalogPlot:
         self.aw = deque([0.0] * maxLen)
         self.ax = deque([0.0] * maxLen)
         self.ay = deque([0.0] * maxLen)
-        #self.az = deque([0.0] * maxLen)
+        self.az = deque([0.0] * maxLen)
+        self.ap = deque([0.0] * maxLen)
+        self.at = deque([0.0] * maxLen)
+        self.aq = deque([0.0] * maxLen)
+        self.ar = deque([0.0] * maxLen)
 
         self.maxLen = maxLen
         self.cnt = 0
@@ -85,14 +89,17 @@ class AnalogPlot:
             self.addToBuf(self.aw, data[2])
             self.addToBuf(self.ax, data[3])
             self.addToBuf(self.ay, data[4])
-       # if len(data) == 6:
-        #    self.addToBuf(self.au, data[0])
-         #   self.addToBuf(self.av, data[1])
-          #  self.addToBuf(self.aw, data[2])
-           # self.addToBuf(self.ax, data[3])
-            #self.addToBuf(self.ay, data[4])
-            #self.addToBuf(self.az, data[5])
-
+        if len(data) == 10:
+            self.addToBuf(self.au, data[0])
+            self.addToBuf(self.av, data[1])
+            self.addToBuf(self.aw, data[2])
+            self.addToBuf(self.ax, data[3])
+            self.addToBuf(self.ay, data[4])
+            self.addToBuf(self.az, data[5])
+            self.addToBuf(self.ap, data[6])
+            self.addToBuf(self.at, data[7])
+            self.addToBuf(self.aq, data[8])
+            self.addToBuf(self.ar, data[9])
 
     def writedata(self, data, docName):
         '''function that writes measurement data to a .txt file'''
@@ -106,7 +113,7 @@ class AnalogPlot:
 
         self.cnt += 1
 
-    def update(self, frameNum, a0=([], []), a1=([], []), a2=([], []), a3=([], []), a4=([], []), a5=([], [])):
+    def update(self, frameNum, a0=([], []), a1=([], []), a2=([], []), a3=([], []), a4=([], []), a5=([], []), a6=([], []), a7=([], []), a8=([], []), a9=([], [])):
         '''
         the update function is continously called by FuncAnimation. The str data from the serial port
         are converted to floats and later written to a txt.file. "frameNum" in the arguments of the function is needed
@@ -115,7 +122,7 @@ class AnalogPlot:
         try:
             line = self.ser.readline()
 
-            convertList = (line.split(";"))[0:6]
+            convertList = (line.split(";"))[0:11]
             if convertList[-1] == '\r\n':
                 convertList.pop(-1)
             if convertList[-1] == '\r\n':
@@ -124,8 +131,18 @@ class AnalogPlot:
                 convertList.pop(-1)
             if convertList[-1] == '\r\n':
                 convertList.pop(-1)
-            #if convertList[-1] == '\r\n':
-             #   convertList.pop(-1)
+            if convertList[-1] == '\r\n':
+                convertList.pop(-1)
+            if convertList[-1] == '\r\n':
+                convertList.pop(-1)
+            if convertList[-1] == '\r\n':
+                convertList.pop(-1)
+            if convertList[-1] == '\r\n':
+                convertList.pop(-1)
+            if convertList[-1] == '\r\n':
+                convertList.pop(-1)
+            if convertList[-1] == '\r\n':
+                convertList.pop(-1)
 
             print convertList
 
@@ -138,7 +155,11 @@ class AnalogPlot:
                 a2.set_data(range(self.maxLen), self.aw)
                 a3.set_data(range(self.maxLen), self.ax)
                 a4.set_data(range(self.maxLen), self.ay)
-                #a5.set_data(range(self.maxLen), self.az)
+                a5.set_data(range(self.maxLen), self.az)
+                a6.set_data(range(self.maxLen), self.ap)
+                a7.set_data(range(self.maxLen), self.at)
+                a8.set_data(range(self.maxLen), self.aq)
+                a9.set_data(range(self.maxLen), self.ar)
 
                 self.writedata(data, docName)
 
@@ -173,24 +194,28 @@ def main():
     a2, = ax.plot([], [])
     a3, = ax.plot([], [])
     a4, = ax.plot([], [])
-    #a5, = ax.plot([], [])
+    a5, = ax.plot([], [])
+    a6, = ax.plot([], [])
+    a7, = ax.plot([], [])
+    a8, = ax.plot([], [])
+    a9, = ax.plot([], [])
 
-    anim = animation.FuncAnimation(fig, analogPlot.update, frames=25, fargs=(a0, a1, a2, a3, a4), interval=10)
+
+    anim = animation.FuncAnimation(fig, analogPlot.update, frames=25, fargs=(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9), interval=10)
     #Writer = animation.writers['ffmpeg']
     #WriterFile = animation.writers['ffmpeg_file']
     #anim.save('osc.mp4', writer=Writer(fps=100), dpi=200)
+
     try:
     # show plot
         plt.show()
     except:
         pass
 
-
     analogPlot.close()
 
     # clean up
     print('exiting.')
-
 
 
 # call main
